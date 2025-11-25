@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; 
 import { Github, Linkedin, Mail, ArrowUpRight, Code2, Palette, Layers, ChevronDown, Sparkles } from 'lucide-react';
 
 const Portfolio = () => {
@@ -7,14 +7,19 @@ const Portfolio = () => {
 
   // Global mouse tracker for spotlight and parallax
   const handleMouseMove = (e: MouseEvent) => {
-  setMousePosition({ x: e.clientX, y: e.clientY });
+    setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
 
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -24,21 +29,28 @@ const Portfolio = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-slate-300 font-sans selection:bg-indigo-500/30 selection:text-indigo-200 relative overflow-x-hidden">
+    <div className="relative min-h-screen overflow-x-hidden text-slate-300 font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
       
+      {/* Solid base background */}
+      <div className="absolute inset-0 bg-[#0a0a0a] z-0"></div>
+
       {/* Dynamic Animated Background */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-purple-900/20 rounded-full blur-[100px] animate-blob mix-blend-screen"></div>
-        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-indigo-900/20 rounded-full blur-[100px] animate-blob animation-delay-2000 mix-blend-screen"></div>
-        <div className="absolute bottom-[-20%] left-[20%] w-[50vw] h-[50vw] bg-blue-900/20 rounded-full blur-[100px] animate-blob animation-delay-4000 mix-blend-screen"></div>
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none w-full h-full">
+        {/* Blobs */}
+        <div className="absolute top-[-20%] left-[-20%] w-[60vw] h-[60vw] bg-purple-900/20 rounded-full blur-[100px] animate-blob mix-blend-screen"></div>
+        <div className="absolute top-[-20%] right-[-20%] w-[55vw] h-[55vw] bg-indigo-900/20 rounded-full blur-[100px] animate-blob animation-delay-2000 mix-blend-screen"></div>
+        <div className="absolute bottom-[-30%] left-[15%] w-[70vw] h-[70vw] bg-blue-900/20 rounded-full blur-[100px] animate-blob animation-delay-4000 mix-blend-screen"></div>
+
+        {/* Mouse spotlight */}
         <div 
           className="absolute inset-0 transition-opacity duration-300"
           style={{
             background: `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(129, 140, 248, 0.05), transparent 80%)`
           }}
         />
+
         {/* Grid Overlay */}
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div> 
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
       </div>
 
       {/* Glass Navigation */}
@@ -46,7 +58,7 @@ const Portfolio = () => {
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
           <div className="text-2xl font-bold tracking-tight cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400 group-hover:to-purple-400 transition-all duration-300">
-              J.Smith
+              Anna Sun
             </span>
           </div>
           <div className="flex gap-8 text-sm font-medium">
@@ -69,14 +81,14 @@ const Portfolio = () => {
         <div className="space-y-8 max-w-4xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-indigo-400 text-sm font-medium animate-fade-in-up">
             <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
-            Available for hire
+            Computer Science Student
           </div>
           
           <div className="space-y-2">
             <h1 className="text-5xl md:text-8xl font-bold text-white tracking-tight leading-none">
-              <span className="block mb-2">Creative</span>
+              <span className="block mb-2">Software</span>
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 animate-gradient-x">
-                Developer.
+                Engineer.
               </span>
             </h1>
           </div>
@@ -103,57 +115,87 @@ const Portfolio = () => {
       </header>
 
       <main className="relative z-10 max-w-7xl mx-auto px-6 space-y-40 pb-40">
-        
-        {/* Interactive Stats / Tech Stack */}
+        {/* Tech Stack / Stats */}
         <ScrollReveal>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-8 rounded-3xl bg-white/5 border border-white/5 backdrop-blur-sm">
-            {[
-              { label: 'Frontend', icon: <Palette className="text-pink-400" />, items: 'React, Vue, Tailwind' },
-              { label: 'Interactive', icon: <Sparkles className="text-yellow-400" />, items: 'Three.js, GSAP, Framer' },
-              { label: 'Backend', icon: <Layers className="text-cyan-400" />, items: 'Node, Supabase, SQL' },
-              { label: 'Tools', icon: <Code2 className="text-indigo-400" />, items: 'Git, Figma, Docker' }
-            ].map((stat, i) => (
-              <div key={i} className="space-y-2 text-center md:text-left">
-                <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-                  {stat.icon}
-                  <span className="font-bold text-white">{stat.label}</span>
-                </div>
-                <p className="text-sm text-slate-500 font-mono">{stat.items}</p>
-              </div>
-            ))}
-          </div>
-        </ScrollReveal>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-8 rounded-3xl bg-white/5 border border-white/5 backdrop-blur-sm">
+    {[
+      {
+        label: 'Languages',
+        items: 'Python (Pandas, NumPy, PyTorch), Java, C++, SQL, C, JavaScript, R',
+        icon: <Code2 className="text-indigo-400" />,
+      },
+      {
+        label: 'Tools & Frameworks',
+        items: 'React, Docker, Kubernetes, Node.js, GitHub, Bash, React Native, REST APIs',
+        icon: <Layers className="text-cyan-400" />,
+      },
+      {
+        label: 'Systems',
+        items: 'Spark, Kafka, Hadoop, Cassandra',
+        icon: <Palette className="text-pink-400" />,
+      },
+      {
+        label: 'Other Skills',
+        items: 'Team Collaboration, Public Speaking, Project Management, Leadership',
+        icon: <Sparkles className="text-yellow-400" />,
+      },
+    ].map((skill, i) => (
+      <div key={i} className="space-y-2 text-center md:text-left">
+        <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+          {skill.icon}
+          <span className="font-bold text-white">{skill.label}</span>
+        </div>
+        <p className="text-sm text-slate-400 font-mono">{skill.items}</p>
+      </div>
+    ))}
+  </div>
+</ScrollReveal>
 
-        {/* Selected Work Section with 3D Tilt Cards */}
+        {/* Work Section */}
         <section id="work">
           <ScrollReveal>
             <div className="flex items-end justify-between mb-16">
               <h2 className="text-4xl md:text-5xl font-bold text-white">Selected Work</h2>
-              <span className="hidden md:block text-slate-500 font-mono">2023 — Present</span>
+              
             </div>
           </ScrollReveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <TiltCard 
-              title="Lumina UI Kit"
+              title="IPO Momentum Trading System"
               category="Design System"
               description="A comprehensive React component library focusing on accessibility and glassmorphism design trends."
               color="from-pink-500/20 to-rose-500/20"
               tags={['React', 'Storybook', 'A11y']}
             />
-            <TiltCard 
-              title="Vantage Dashboard"
+             <TiltCard 
+              title="Chatbot"
               category="SaaS Platform"
               description="Real-time analytics dashboard with WebGL data visualization and customizable widget layouts."
               color="from-indigo-500/20 to-blue-500/20"
               tags={['Next.js', 'WebGL', 'Socket.io']}
             />
             <TiltCard 
-              title="Neon Marketplace"
+              title="Cloud Data Pipeline"
+              category="SaaS Platform"
+              description="Real-time analytics dashboard with WebGL data visualization and customizable widget layouts."
+              color="from-indigo-500/20 to-blue-500/20"
+              tags={['Next.js', 'WebGL', 'Socket.io']}
+            />
+            <TiltCard 
+              title="Bit by Bit"
               category="E-Commerce"
               description="High-performance e-commerce frontend with fluid page transitions and optimistic UI updates."
               color="from-cyan-500/20 to-teal-500/20"
               tags={['Vue 3', 'Tailwind', 'Stripe']}
+            />
+            
+             <TiltCard 
+              title="Flappy Bird"
+              category="SaaS Platform"
+              description="Real-time analytics dashboard with WebGL data visualization and customizable widget layouts."
+              color="from-indigo-500/20 to-blue-500/20"
+              tags={['Next.js', 'WebGL', 'Socket.io']}
             />
           </div>
         </section>
@@ -191,21 +233,157 @@ const Portfolio = () => {
                 <ul className="space-y-8 border-l border-white/10 ml-1 pl-8">
                   <li className="relative">
                     <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-indigo-500"></span>
-                    <p className="text-white font-bold">Senior Frontend Engineer</p>
-                    <p className="text-sm text-slate-500 mb-2">TechFlow Inc. • 2022 - Present</p>
-                    <p className="text-slate-400 text-sm">Leading the frontend migration to Next.js and establishing a new internal design system.</p>
+                    <p className="text-white font-bold">Software Engineer Intern</p>
+                    <p className="text-sm text-slate-500 mb-2">IBM • May 2025 - Aug 2025</p>
+                    <p className="text-slate-400 text-sm">chatbot</p>
+                  </li>
+
+                  <li className="relative">
+                    <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                    <p className="text-white font-bold">Undergraduate Teaching Assistant</p>
+                    <p className="text-sm text-slate-500 mb-2">CS • Sep 2024 - Present</p>
+                    <p className="text-slate-400 text-sm">Developed award-winning marketing sites with heavy animation and WebGL features.</p>
+                  </li>
+
+                  <li className="relative">
+                    <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                    <p className="text-white font-bold">Undergraduate Researcher</p>
+                    <p className="text-sm text-slate-500 mb-2">Theory • Jan 2025 - May 2025</p>
+                    <p className="text-slate-400 text-sm">Developed award-winning marketing sites with heavy animation and WebGL features.</p>
+                  </li>
+
+                   <li className="relative">
+                    <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                    <p className="text-white font-bold">Lab Coordinator</p>
+                    <p className="text-sm text-slate-500 mb-2">Undergraduate Projects Lab • Jan 2024 - Present</p>
+                    <p className="text-slate-400 text-sm">Developed award-winning marketing sites with heavy animation and WebGL features.</p>
                   </li>
                   <li className="relative">
                     <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
-                    <p className="text-white font-bold">UI Developer</p>
-                    <p className="text-sm text-slate-500 mb-2">Creative Agency • 2020 - 2022</p>
+                    <p className="text-white font-bold">Academy of Math and Programming Fellow</p>
+                    <p className="text-sm text-slate-500 mb-2">Jane Street • Jun 2023 - Aug 2023</p>
                     <p className="text-slate-400 text-sm">Developed award-winning marketing sites with heavy animation and WebGL features.</p>
                   </li>
+                  <li className="relative">
+                    <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                    <p className="text-white font-bold">Barista</p>
+                    <p className="text-sm text-slate-500 mb-2">Starbucks • Jun 2023 - Aug 2023</p>
+                    <p className="text-slate-400 text-sm">Developed award-winning marketing sites with heavy animation and WebGL features.</p>
+                  </li>
+                  <li className="relative">
+                    <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                    <p className="text-white font-bold">Tennis Attendant</p>
+                    <p className="text-sm text-slate-500 mb-2">RTC • Jun 2023 - Aug 2023</p>
+                    <p className="text-slate-400 text-sm">Developed award-winning marketing sites with heavy animation and WebGL features.</p>
+                  </li>
+                  <li className="relative">
+                    <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                    <p className="text-white font-bold">Petsitter</p>
+                    <p className="text-sm text-slate-500 mb-2">Rover • Jun 2023 - Aug 2023</p>
+                    <p className="text-slate-400 text-sm">Developed award-winning marketing sites with heavy animation and WebGL features.</p>
+                  </li>
+
                 </ul>
               </div>
             </div>
           </ScrollReveal>
         </section>
+        
+
+      <section id="events" className="grid md:grid-cols-2 gap-16 items-center">
+        <ScrollReveal>
+          <div className="space-y-8">
+            <div>
+              <h4 className="text-white font-bold mb-4 flex items-center gap-2">
+                <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                Events
+              </h4>
+              <ul className="space-y-8 border-l border-white/10 ml-1 pl-8">
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-indigo-500"></span>
+                  <p className="text-white font-bold">Madhacks</p>
+                  <p className="text-sm text-slate-500 mb-2">2025</p>
+                  <p className="text-slate-400 text-sm">Won 1st place for innovative Web3 UI.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">ICPC North Central Regionals</p>
+                  <p className="text-sm text-slate-500 mb-2">International Collegiate Programming Contest • Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">Grace Hopper</p>
+                  <p className="text-sm text-slate-500 mb-2">2022</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">Prosperity</p>
+                  <p className="text-sm text-slate-500 mb-2">2022</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">UChicago Trading Competition</p>
+                  <p className="text-sm text-slate-500 mb-2">University of Chicago • Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">Georgia Tech Trading Competition</p>
+                  <p className="text-sm text-slate-500 mb-2">Georgia Institute of Technology • Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">ICPC North Central Regionals</p>
+                  <p className="text-sm text-slate-500 mb-2">International Collegiate Programming Contest • Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">Madhacks</p>
+                  <p className="text-sm text-slate-500 mb-2">Forte Foundatation • Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">Northwestern Trading Competition</p>
+                  <p className="text-sm text-slate-500 mb-2">Northwestern University• Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">Wall Street Bound</p>
+                  <p className="text-sm text-slate-500 mb-2">Wall Street Bound • Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">Madhacks</p>
+                  <p className="text-sm text-slate-500 mb-2">Forte Foundatation • Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+                <li className="relative">
+                  <span className="absolute -left-[37px] top-1 w-4 h-4 rounded-full border-2 border-slate-800 bg-slate-600"></span>
+                  <p className="text-white font-bold">Fast Track To Finance</p>
+                  <p className="text-sm text-slate-500 mb-2">Forte Foundatation • Feb 2024</p>
+                  <p className="text-slate-400 text-sm">Led a hands-on workshop on React 18 features and Suspense.</p>
+                </li>
+
+
+
+              </ul>
+            </div>
+          </div>
+        </ScrollReveal>
+      </section>
+
+
+
+        
 
         {/* Contact CTA */}
         <section id="contact" className="text-center max-w-3xl mx-auto">
@@ -214,13 +392,13 @@ const Portfolio = () => {
               Let's build something <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">extraordinary.</span>
             </h2>
-            <p className="text-slate-400 text-xl mb-12">
+            {/*<p className="text-slate-400 text-xl mb-12">
               Currently available for freelance projects and open to full-time opportunities.
-            </p>
+            </p>*/}
             <div className="flex justify-center gap-6">
-              <SocialButton icon={<Mail />} href="mailto:hello@example.com" label="Email" />
-              <SocialButton icon={<Github />} href="#" label="GitHub" />
-              <SocialButton icon={<Linkedin />} href="#" label="LinkedIn" />
+              <SocialButton icon={<Mail />} href="mailto:asun.wisc@gmail.com" label="Email" />
+              <SocialButton icon={<Github />} href="https://github.com/annasun04" label="GitHub" />
+              <SocialButton icon={<Linkedin />} href="https://www.linkedin.com/in/annasun04/" label="LinkedIn" />
             </div>
           </ScrollReveal>
         </section>
@@ -230,7 +408,7 @@ const Portfolio = () => {
         <p>© 2024 Jordan Smith. Crafted with React & Tailwind.</p>
       </footer>
 
-      {/* CSS for custom animations that Tailwind doesn't cover by default */}
+      {/* Custom Animations */}
       <style>{`
         @keyframes blob {
           0% { transform: translate(0px, 0px) scale(1); }
@@ -238,15 +416,9 @@ const Portfolio = () => {
           66% { transform: translate(-20px, 20px) scale(0.9); }
           100% { transform: translate(0px, 0px) scale(1); }
         }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
+        .animate-blob { animation: blob 7s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
         .animate-gradient-x {
           background-size: 200% 200%;
           animation: gradient-move 5s ease infinite;
@@ -256,30 +428,21 @@ const Portfolio = () => {
           50% { background-position: 100% 50% }
           100% { background-position: 0% 50% }
         }
-        .perspective-1000 {
-          perspective: 1000px;
-        }
+        .perspective-1000 { perspective: 1000px; }
       `}</style>
     </div>
   );
 };
 
 // --- Components ---
-interface ScrollRevealProps {
-  children: React.ReactNode;
-  delay?: number;
-}
+interface ScrollRevealProps { children: React.ReactNode; delay?: number; }
 const ScrollReveal: React.FC<ScrollRevealProps> = ({ children, delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
+      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
       { threshold: 0.1 }
     );
     if (ref.current) observer.observe(ref.current);
@@ -296,38 +459,22 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({ children, delay = 0 }) => {
     </div>
   );
 };
-interface TiltCardProps {
-  title: string;
-  category: string;
-  description: string;
-  color: string;
-  tags: string[];
-}
 
+interface TiltCardProps { title: string; category: string; description: string; color: string; tags: string[]; }
 const TiltCard: React.FC<TiltCardProps> = ({ title, category, description, color, tags }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return; // <- null check
+    if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    // Calculate rotation based on mouse position
-    // Center of card is (0,0)
-    const xPct = (x / rect.width) - 0.5;
-    const yPct = (y / rect.height) - 0.5;
-
-    // Max rotation 10 degrees
+    const xPct = (e.clientX - rect.left) / rect.width - 0.5;
+    const yPct = (e.clientY - rect.top) / rect.height - 0.5;
     setRotation({ x: -yPct * 20, y: xPct * 20 });
   };
 
-  const handleMouseLeave = () => {
-    setRotation({ x: 0, y: 0 });
-    setIsHovered(false);
-  };
+  const handleMouseLeave = () => { setRotation({ x: 0, y: 0 }); setIsHovered(false); };
 
   return (
     <div className="perspective-1000">
@@ -336,49 +483,29 @@ const TiltCard: React.FC<TiltCardProps> = ({ title, category, description, color
         onMouseMove={(e) => { handleMouseMove(e); setIsHovered(true); }}
         onMouseLeave={handleMouseLeave}
         className="relative h-full bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-2xl p-8 transition-all duration-200 ease-out group overflow-hidden hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-white/20"
-        style={{ 
-          transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.02 : 1})`,
-        }}
+        style={{ transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) scale(${isHovered ? 1.02 : 1})` }}
       >
-        {/* Gradient Background on Hover */}
         <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10`}></div>
-        
         <div className="flex justify-between items-start mb-8">
           <div className="p-3 bg-white/5 rounded-lg border border-white/10 group-hover:bg-white/10 transition-colors">
-            <Layers className="text-white" size={24} />
+            <Layers className="text-indigo-400" size={24} />
           </div>
-          <ArrowUpRight className="text-slate-500 group-hover:text-white transition-colors" />
+          <span className="text-slate-400 font-mono text-sm">{category}</span>
         </div>
-
-        <p className="text-indigo-400 text-xs font-bold tracking-wider uppercase mb-2">{category}</p>
-        <h3 className="text-2xl font-bold text-white mb-4">{title}</h3>
-        <p className="text-slate-400 mb-6 text-sm leading-relaxed">{description}</p>
-        
-        <div className="flex gap-2 flex-wrap">
-          {tags.map(tag => (
-            <span key={tag} className="text-xs font-mono px-2 py-1 rounded bg-white/5 text-slate-400 border border-white/5">
-              {tag}
-            </span>
-          ))}
+        <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+        <p className="text-slate-400 text-sm mb-4">{description}</p>
+        <div className="flex flex-wrap gap-2 text-xs text-indigo-400 font-mono">
+          {tags.map((tag, i) => <span key={i} className="px-2 py-1 bg-white/5 rounded">{tag}</span>)}
         </div>
       </div>
     </div>
   );
 };
-interface SocialButtonProps {
-  icon: React.ReactNode;
-  href: string;
-  label: string;
-}
+
+interface SocialButtonProps { icon: React.ReactNode; href: string; label: string; }
 const SocialButton: React.FC<SocialButtonProps> = ({ icon, href, label }) => (
-  <a 
-    href={href} 
-    className="group relative p-4 bg-white/5 rounded-full hover:bg-white/10 transition-colors border border-white/5 hover:border-white/20"
-    aria-label={label}
-  >
-    <div className="text-slate-300 group-hover:text-white transition-colors">
-      {icon}
-    </div>
+  <a href={href} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2 border border-white/10 rounded-full hover:bg-white/5 transition-all duration-300">
+    {icon} <span>{label}</span>
   </a>
 );
 
