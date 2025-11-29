@@ -95,7 +95,7 @@ const Portfolio = () => {
               {/* CHANGED: Added Typewriter component here */}
               {/* CHANGED: Added pb-4 (padding bottom) to give the 'g' descender space */}
               <span className="block pb-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400 animate-gradient-x">
-                <Typewriter text="Anna Sun" delay={400} />
+                <Typewriter text="Wendy Sun" delay={400} />
               </span>
             </h1>
           </div>
@@ -491,16 +491,16 @@ const Portfolio = () => {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">extraordinary.</span>
             </h2>
             <div className="flex **justify-center** gap-6">
-              <SocialButton icon={<Mail />} href="mailto:asun.wisc@gmail.com" label="Email" />
-              <SocialButton icon={<Github />} href="https://github.com/annasun04" label="GitHub" />
-              <SocialButton icon={<Linkedin />} href="https://www.linkedin.com/in/annasun04/" label="LinkedIn" />
+              <SocialButton icon={<Mail />} href="mailto:example@gmail.com" label="Email" />
+              <SocialButton icon={<Github />} href="https://github.com/" label="GitHub" />
+              <SocialButton icon={<Linkedin />} href="https://www.linkedin.com/in/" label="LinkedIn" />
             </div>
           </ScrollReveal>
         </section>
       </main>
 
       <footer className="py-8 text-center text-slate-600 text-sm relative z-10">
-        <p>© 2025 Anna Sun. Crafted with React & Tailwind.</p>
+        <p>© 2025 Wendy Sun. Crafted with React & Tailwind.</p>
       </footer>
 
       {/* Custom Animations */}
